@@ -1,4 +1,5 @@
 import express from 'express';
+import 'express-async-errors';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { json } from 'body-parser';
 import { logger } from './logger';
@@ -18,7 +19,7 @@ app.use(signinRouter);
 app.use(signoutRouter);
 app.use(signupRouter);
 
-app.all('*', () => {
+app.all('*', async () => {
   throw new NotFoundError();
 });
 
