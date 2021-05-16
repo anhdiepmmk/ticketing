@@ -1,6 +1,7 @@
 import express from 'express';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { json } from 'body-parser';
+import { logger } from './logger';
 
 import { currentUserRouter } from './routes/current-user';
 import { signinRouter } from './routes/signin';
@@ -14,21 +15,21 @@ app.use(currentUserRouter);
 app.use(signinRouter);
 app.use(signoutRouter);
 app.use(signupRouter);
+app.use((err: Error, req: express.Request, res: express.Response, next: Function) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
 
 const PORT = 3000;
 const server = app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Listing on port ${PORT}!`);
+  logger.info(`Listing on port ${PORT}!`);
 });
 
 const gracefulShutDown = () => {
-  // eslint-disable-next-line no-console
-  console.info('Received SIGINT or SIGTERM.');
-  // eslint-disable-next-line no-console
-  console.log('Closing http server.');
+  logger.info('Received SIGINT or SIGTERM.');
+  logger.info('Closing http server.');
   server.close(() => {
-    // eslint-disable-next-line no-console
-    console.log('Http server closed');
+    logger.info('Http server closed');
   });
 };
 
