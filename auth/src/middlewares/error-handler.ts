@@ -1,21 +1,13 @@
 import { Request, Response } from 'express';
 import { logger } from '../logger';
 import _ from 'lodash';
-
-import { RequestValidationError } from '../errors/request-validation-error';
-import { DatabaseConnectionError } from '../errors/database-connection-error';
+import { HttpError } from '../errors/http-error';
 
 export const errorHandler = (err: Error, req: Request, res: Response, next: Function) => {
   logger.error(err.message, err);
+
   
-  if (err instanceof RequestValidationError) {
-    
-    return res.status(err.httpCode!).json({
-      errors: err.serializeErrors(),
-    });
-  }
-  
-  if (err instanceof DatabaseConnectionError) {
+  if (err instanceof HttpError) {
     return res.status(err.httpCode!).json({
       errors: err.serializeErrors(),
     });

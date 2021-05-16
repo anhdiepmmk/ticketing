@@ -5,9 +5,7 @@ export class RequestValidationError extends HttpError {
   httpCode = 422;
 
   constructor(public errors: ValidationError[]) {
-    super();
-    
-    this.message = errors.map(e => e.msg).join(', ');
+    super('Invalid request parameters');
     // Only because we are extending a built in class
     Object.setPrototypeOf(this, RequestValidationError.prototype);
   }

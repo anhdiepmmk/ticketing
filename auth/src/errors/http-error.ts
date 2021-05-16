@@ -1,9 +1,13 @@
-export class HttpError extends Error {
-  constructor(public httpCode?: number) {
-    super();
+export abstract class HttpError extends Error {
+  abstract httpCode?: number;
+
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, HttpError.prototype);
   }
 
-  public serializeErrors() {
-    throw new Error('Implement serialize error');
-  }
+  abstract serializeErrors(): {
+    message: string,
+    field?: string,
+  }[];
 }
