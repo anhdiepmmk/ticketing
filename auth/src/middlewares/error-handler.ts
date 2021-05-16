@@ -9,17 +9,15 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Func
   logger.error(err.message, err);
   
   if (err instanceof RequestValidationError) {
-    const formattedErrors = err.errors.map(error => ({
-      message: error.msg, field: error.param,
-    }));
+    
     return res.status(err.httpCode!).json({
-      errors: formattedErrors,
+      errors: err.serializeErrors(),
     });
   }
   
   if (err instanceof DatabaseConnectionError) {
     return res.status(err.httpCode!).json({
-      errors: [{ message: err.reason }],
+      errors: err.serializeErrors(),
     });
   }
   
